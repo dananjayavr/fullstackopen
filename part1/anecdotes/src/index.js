@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 
 const Button = (props) => {
   return (
-  <button onClick={props.clickHandler}>next anecdote</button>
+  <button onClick={props.clickHandler}>{props.label}</button>
   )
 }
 
-const App = (props) => {
+const App = () => {
   const [selected, setSelected] = useState(0)
-
+  
   const randomAnecdote = () => {
     let randomInt = Math.round(Math.random() * (anecdotes.length - 1))
     return (
@@ -20,9 +20,11 @@ const App = (props) => {
   return (
     <>
       <div>
-        {props.anecdotes[selected]}
+        {anecdotes[selected]}
       </div>
-      <Button clickHandler={randomAnecdote}/>
+      <div>has {copy[selected]} votes</div>
+      <Button clickHandler={() => copy[selected] += 1 } label="vote"/>
+      <Button clickHandler={randomAnecdote} label="next anecdote"/>
     </>
   )
 }
@@ -36,6 +38,8 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
+const points = new Array(anecdotes.length+1).join('0').split('').map(parseFloat)
+const copy = [...points]
 
-ReactDOM.render( <App anecdotes={anecdotes}/>, document.getElementById('root'));
+ReactDOM.render( <App anecdotes={anecdotes} />, document.getElementById('root'));
 
