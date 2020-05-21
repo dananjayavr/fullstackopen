@@ -19,12 +19,18 @@ const App = () => {
 
   return (
     <>
+      <h2>Anecdote of the Day</h2>
       <div>
         {anecdotes[selected]}
       </div>
       <div>has {copy[selected]} votes</div>
       <Button clickHandler={() => copy[selected] += 1 } label="vote"/>
       <Button clickHandler={randomAnecdote} label="next anecdote"/>
+      <h2>Anecdotes with most votes</h2>
+      <div>
+        {anecdotes[copy.indexOf(Math.max(...copy))]}
+      </div>
+
     </>
   )
 }
