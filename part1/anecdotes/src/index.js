@@ -31,7 +31,7 @@ const App = () => {
         {anecdotes[copy.indexOf(Math.max(...copy))]}
       </div>
 
-    </>
+    </> 
   )
 }
 
