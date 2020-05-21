@@ -27,11 +27,11 @@ const Button = (props) => (
     
 } */
 
-const Statistic = (props) => {
+/* const Statistic = (props) => {
   return (
     <div>{props.text} {props.value}</div>
   )
-}
+} */
 
 const App = () => {
   // save clicks of each button to own state
@@ -48,12 +48,41 @@ const App = () => {
         <Button handleClick={() => {setBad(bad+ 1)}} label="bad"/>
         <h2>Statistics</h2>
         {/* <Statistics good={good} neutral={neutral} bad={bad}/> */}
-        <Statistic text="good" value={good}/>
+        <table>
+          <thead></thead>
+          <tbody>
+            <tr>
+              <td>good</td>
+              <td>{good}</td>
+            </tr>
+            <tr>
+              <td>neutral</td>
+              <td>{neutral}</td>
+            </tr>
+            <tr>
+              <td>bad</td>
+              <td>{bad}</td>
+            </tr>
+            <tr>
+              <td>all</td>
+              <td>{good + neutral + bad}</td>
+            </tr>
+            <tr>
+              <td>average</td>
+              <td>{((good * 1) + (bad * -1)) / (good + bad + neutral)}</td>
+            </tr>
+            <tr>
+              <td>positive</td>
+              <td>{(good / (good + neutral + bad) * 100)}%</td>
+            </tr>
+          </tbody>
+        </table>
+        {/* <Statistic text="good" value={good}/>
         <Statistic text="neutral" value={neutral}/>
         <Statistic text="bad" value={bad}/>
         <Statistic text="all" value={good + neutral + bad}/>
         <Statistic text="average" value={((good * 1) + (bad * -1)) / (good + bad + neutral)}/>
-        <Statistic text="positive" value={(good / (good + neutral + bad) * 100) + "%"}/>
+        <Statistic text="positive" value={(good / (good + neutral + bad) * 100) + "%"}/> */}
       </div>
     )
   }
