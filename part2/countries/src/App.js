@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 
-const Country = ({ country }) => {
+const Country = ({ country, display }) => {
 
   const [temperature, setTemperature] = useState(0)
   const [wind, setWind] = useState('')
@@ -18,7 +18,7 @@ const Country = ({ country }) => {
     axios.get('http://api.weatherstack.com/current', { params })
       .then(response => {
         setTemperature(response.data.current.temperature);
-        setWind(response.data.current.wind_speed + ' mph direction ' + response.data.current.wind_dir )
+        setWind(response.data.current.wind_speed + ' kph direction ' + response.data.current.wind_dir )
         setIcon(response.data.current.weather_icons[0])
         setWeatherDescription(response.data.current.weather_descriptions[0])
       }).catch(error => {
@@ -29,7 +29,7 @@ const Country = ({ country }) => {
   useEffect(hook,[])
 
   return (
-    <>
+    <div style={{ display: display }}>
       <h2>{country.name}</h2>
       <div>capital {country.capital}</div>
       <div>population {country.population}</div>
@@ -42,7 +42,7 @@ const Country = ({ country }) => {
       <div><strong>temperature:</strong> {temperature} Celsius</div>
       <img src={icon} style={{ width: 50 + 'px' }} alt={weatherDescription}/>
       <div><strong>wind:</strong> {wind}</div>
-    </>
+    </div>
   )
 }
 
@@ -50,10 +50,19 @@ const App = () => {
 
   const [query, setQuery] = useState('')
   const [countries, setCountries] = useState([])
-
+  
   const handleQuery = (event) => {
     setQuery(event.target.value)
   }
+
+  const [showCountry, setShowCountry] = useState(false)
+
+  const showHandler = (event) => {
+    event.preventDefault()
+    console.log(event)
+    setShowCountry(!showCountry)
+  }
+
 
   const hook = () => {
     axios
@@ -100,7 +109,7 @@ const App = () => {
         <div>
           find countries <input value={query} onChange={handleQuery} />
         </div>
-        {results.map(country => <div key={country.name}>{country.name}</div>)}
+        {results.map(country => <div key={country.name}>{country.name} <button onClick={showHandler} value={country.name}>show</button><Country country={country} display={showCountry ? "block" : "none" }/></div>)}
       </>
     )
   }
