@@ -59,7 +59,6 @@ const App = () => {
 
   const showHandler = (event) => {
     event.preventDefault()
-    console.log(event)
     setShowCountry(!showCountry)
   }
 
