@@ -3,9 +3,10 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
+import Notification from './components/Notification'
 import ContactService from './services/contact'
 
-import './App.css';
+import './index.css';
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const deleteContact = (id) => {
     
@@ -57,8 +59,14 @@ const App = () => {
         ContactService
           .updateNumber(personToUpdate.id, personToUpdate)
           .then(returnedValue => {
-            setPersons(persons.splice(personToUpdate.id -1, 1))
-            setPersons(persons.concat(returnedValue))
+            persons.map((person,i) => {
+              console.log(i)
+              if(i === personToUpdate.id-1) {
+                person.number = newNumber
+              }
+            })
+            setPersons(persons)
+            setNotification(`Updated ${returnedValue.name}`)
           })
       }
     } else {
@@ -66,10 +74,16 @@ const App = () => {
         .create(latestName)
         .then(returnedContact => {
           setPersons(persons.concat(returnedContact))
+          setNotification(`Added ${returnedContact.name}`)
         })
     }
+
     setNewNumber('')
     setNewName('')
+
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
   }
 
   const handleAddNewName = (event) => {
@@ -86,6 +100,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notification}/>
       <h2>Phonebook</h2>
       <Filter handler={handleNameFilter} />
       <h2>add a new</h2>
