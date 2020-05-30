@@ -23,7 +23,7 @@ const App = () => {
         setPersons(persons.map(person => person.id !== id ? person : {name:null,number:null,id:null}))
       })
     } else {
-      
+
     }
   }
 
@@ -45,7 +45,22 @@ const App = () => {
     }
 
     if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      const personToUpdate = persons.map(person => {
+        if(person.name === newName) {
+          return {name:person.name,number:newNumber,id:person.id}
+        } else {
+          return null
+        }
+      }).filter(id => id !== null).pop()
+
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        ContactService
+          .updateNumber(personToUpdate.id, personToUpdate)
+          .then(returnedValue => {
+            setPersons(persons.splice(personToUpdate.id -1, 1))
+            setPersons(persons.concat(returnedValue))
+          })
+      }
     } else {
       ContactService
         .create(latestName)
