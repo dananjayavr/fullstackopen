@@ -14,6 +14,19 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
 
+  const deleteContact = (id) => {
+    
+    if(window.confirm(`Delete ${persons[id -1].name}?`)) {
+      ContactService
+      .deleteContact(id)
+      .then(response => {
+        setPersons(persons.map(person => person.id !== id ? person : {name:null,number:null,id:null}))
+      })
+    } else {
+      
+    }
+  }
+
   const hook = () => {
     axios
       .get('http://localhost:3001/persons')
@@ -71,11 +84,15 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      {persons.map((person) => {
-        if (person.name.toLowerCase().includes(nameFilter.toLowerCase())) {
-          return (
-            <Person person={person} key={person.name}/>
-          )
+      {persons.map((person, i) => {
+        if(person.name !== null) {
+          if (person.name.toLowerCase().includes(nameFilter.toLowerCase())) {
+            return (
+              <Person person={person} key={i} deleteContact={() => deleteContact(person.id)}/>
+            )
+          } else {
+            return false
+          }
         } else {
           return false
         }
