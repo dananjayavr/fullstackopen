@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
 import Notification from './components/Notification'
+import Error from './components/Error'
 import ContactService from './services/contact'
 
 import './index.css';
@@ -15,14 +16,16 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
   const [notification, setNotification] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const deleteContact = (id) => {
-    
-    if(window.confirm(`Delete ${persons[id -1].name}?`)) {
+    if(window.confirm(`Delete ${persons.filter(person => person.id === id).pop().name}?`)) {
       ContactService
       .deleteContact(id)
       .then(response => {
         setPersons(persons.map(person => person.id !== id ? person : {name:null,number:null,id:null}))
+      }).catch(error => {
+        setErrorMessage(`Information of ${persons.filter(person => person.id === id).pop().name} has already been removed from server`)
       })
     } else {
 
@@ -63,10 +66,15 @@ const App = () => {
               console.log(i)
               if(i === personToUpdate.id-1) {
                 person.number = newNumber
+                return true
+              } else {
+                return false
               }
             })
             setPersons(persons)
             setNotification(`Updated ${returnedValue.name}`)
+          }).catch(error => {
+            setErrorMessage(`Information of ${newName} has already been removed from server`)
           })
       }
     } else {
@@ -101,6 +109,7 @@ const App = () => {
   return (
     <div>
       <Notification message={notification}/>
+      <Error message={errorMessage}/>
       <h2>Phonebook</h2>
       <Filter handler={handleNameFilter} />
       <h2>add a new</h2>
