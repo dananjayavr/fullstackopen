@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
+import ContactService from './services/contact'
 
 import './App.css';
 
@@ -33,7 +34,11 @@ const App = () => {
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      setPersons(persons.concat(latestName))
+      ContactService
+        .create(latestName)
+        .then(returnedContact => {
+          setPersons(persons.concat(returnedContact))
+        })
     }
     setNewNumber('')
     setNewName('')
