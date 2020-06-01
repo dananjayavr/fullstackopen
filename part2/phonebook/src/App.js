@@ -34,7 +34,7 @@ const App = () => {
 
   const hook = () => {
     axios
-      .get('http://localhost:3001/persons')
+      .get('/api/persons')
       .then(response => {
         setPersons(response.data)
       })
