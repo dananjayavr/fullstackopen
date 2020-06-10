@@ -19,14 +19,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const deleteContact = (id) => {
-    if(window.confirm(`Delete ${persons.filter(person => person.id === id).pop().name}?`)) {
+    if (window.confirm(`Delete ${persons.filter(person => person.id === id).pop().name}?`)) {
       ContactService
-      .deleteContact(id)
-      .then(response => {
-        setPersons(persons.map(person => person.id !== id ? person : {name:null,number:null,id:null}))
-      }).catch(error => {
-        setErrorMessage(`Information of ${persons.filter(person => person.id === id).pop().name} has already been removed from server`)
-      })
+        .deleteContact(id)
+        .then(response => {
+          setPersons(persons.map(person => person.id !== id ? person : { name: null, number: null, id: null }))
+        }).catch(error => {
+          setErrorMessage(`Information of ${persons.filter(person => person.id === id).pop().name} has already been removed from server`)
+        })
     } else {
 
     }
@@ -40,7 +40,7 @@ const App = () => {
       })
   }
 
-  useEffect(hook,[])
+  useEffect(hook, [])
 
   const addNewPerson = (event) => {
     event.preventDefault()
@@ -63,7 +63,6 @@ const App = () => {
           .updateNumber(personToUpdate.id, personToUpdate)
           .then(returnedValue => {
             persons.map((person,i) => {
-              console.log(i)
               if(i === personToUpdate.id-1) {
                 person.number = newNumber
                 return true
@@ -71,10 +70,17 @@ const App = () => {
                 return false
               }
             })
+            persons.map((person,i) => {
+              if(person.name === newName) {
+                persons[i].number = newNumber
+              }
+              return true 
+            })
             setPersons(persons)
             setNotification(`Updated ${returnedValue.name}`)
           }).catch(error => {
-            setErrorMessage(`Information of ${newName} has already been removed from server`)
+            //setErrorMessage(`Information of ${newName} has already been removed from server`)
+            setErrorMessage(error.response.data['error'])
           })
       }
     } else {
@@ -84,6 +90,9 @@ const App = () => {
           setPersons(persons.concat(returnedContact))
           setNotification(`Added ${returnedContact.name}`)
         })
+        .catch(error => {
+          setErrorMessage(error.response.data['error'])
+        })
     }
 
     setNewNumber('')
@@ -91,6 +100,7 @@ const App = () => {
 
     setTimeout(() => {
       setNotification(null)
+      setErrorMessage(null)
     }, 3000)
   }
 
@@ -108,8 +118,8 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notification}/>
-      <Error message={errorMessage}/>
+      <Notification message={notification} />
+      <Error message={errorMessage} />
       <h2>Phonebook</h2>
       <Filter handler={handleNameFilter} />
       <h2>add a new</h2>
@@ -124,10 +134,10 @@ const App = () => {
 
       <h2>Numbers</h2>
       {persons.map((person, i) => {
-        if(person.name !== null) {
+        if (person.name !== null) {
           if (person.name.toLowerCase().includes(nameFilter.toLowerCase())) {
             return (
-              <Person person={person} key={i} deleteContact={() => deleteContact(person.id)}/>
+              <Person person={person} key={i} deleteContact={() => deleteContact(person.id)} />
             )
           } else {
             return false
