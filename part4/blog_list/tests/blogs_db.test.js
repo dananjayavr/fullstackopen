@@ -28,6 +28,11 @@ test('there are 6 notes', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('blog object contains id property', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body.map(r => r.id)).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
