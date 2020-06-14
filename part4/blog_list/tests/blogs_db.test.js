@@ -33,6 +33,27 @@ test('blog object contains id property', async () => {
   expect(response.body.map(r => r.id)).toBeDefined()
 })
 
+test('creates a new blog entry', async () => {
+  const newBlog = {
+    title: 'Never Hertz to Ask',
+    author: 'Alex Danco',
+    url:'https://alexdanco.com/2020/06/14/never-hertz-to-ask/',
+    likes:9
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+
+  const blogs= await Blog.find({})
+  const blogsAtEnd = blogs.map(blog => blog.toJSON())
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+  const titles = blogsAtEnd.map(blog => blog.title)
+  expect(titles).toContain('Never Hertz to Ask')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
