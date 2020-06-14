@@ -54,6 +54,25 @@ test('creates a new blog entry', async () => {
   expect(titles).toContain('Never Hertz to Ask')
 })
 
+test('a blog without likes property will default to zero', async () => {
+  const newBlog = {
+    title: 'Storytelling tips for technical interviews',
+    author: 'David Stanete',
+    url: 'https://stanete.com/storytelling-tips-technical-interviews'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+
+  const targetBlog = await Blog.find({ title:'Storytelling tips for technical interviews' })
+
+  targetBlog.map(blog => expect(blog.likes).toEqual(0))
+
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
