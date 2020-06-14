@@ -67,10 +67,20 @@ test('a blog without likes property will default to zero', async () => {
     .expect(201)
     .expect('Content-Type',/application\/json/)
 
-  const targetBlog = await Blog.find({ title:'Storytelling tips for technical interviews' })
+  const targetBlog = await Blog.findOne({ title:'Storytelling tips for technical interviews' })
+  expect(targetBlog.likes).toEqual(0)
+})
 
-  targetBlog.map(blog => expect(blog.likes).toEqual(0))
+test('a blog without title or url will be rejected with 400', async () => {
+  const malformedBlog = {
+    likes: 0,
+    author: 'John Doe'
+  }
 
+  await api
+    .post('/api/blogs')
+    .send(malformedBlog)
+    .expect(400)
 })
 
 afterAll(() => {
